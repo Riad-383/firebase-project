@@ -1,6 +1,8 @@
 import 'package:firebase_project/Ui/uth/login_screen.dart';
+import 'package:firebase_project/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../widgets/round_button.dart';
 
@@ -15,6 +17,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final formKey = GlobalKey<FormState>();
   final emailControler = TextEditingController();
   final passwordController = TextEditingController();
+  bool loading = false;
+  final _auth = FirebaseAuth.instance;
   @override
   void dispose() {
     super.dispose();
@@ -22,6 +26,25 @@ class _SignupScreenState extends State<SignupScreen> {
 
     emailControler.dispose();
     passwordController.dispose();
+  }
+  void signup(){
+    setState(() {
+                  loading = true;
+                });
+                  _auth
+                      .createUserWithEmailAndPassword(
+                          email: emailControler.text.toString(),
+                          password: passwordController.text.toString())
+                      .then((value) {
+                    setState(() {
+                      loading = false;
+                    });
+                  }).onError((error, stackTrace) {
+                    Utils().toastMassage(error.toString());
+                    setState(() {
+                      loading = false;
+                    });
+                  });
   }
 
   @override
@@ -77,8 +100,11 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             RoundButton(
               title: "Sign up",
+              loading: loading,
               onTap: () {
-                if (formKey.currentState!.validate()) {}
+                if (formKey.currentState!.validate()) {
+                  signup();
+                }
               },
             ),
             const SizedBox(
