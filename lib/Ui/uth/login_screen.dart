@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_project/Ui/posts/post_screen.dart';
+import 'package:firebase_project/Ui/uth/login_phone.dart';
 import 'package:firebase_project/Ui/uth/signup_screen.dart';
 import 'package:firebase_project/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,16 +48,16 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => const PostScreen(),
           ));
-          setState(() {
-      loading = false;
-    });
+      setState(() {
+        loading = false;
+      });
     }).onError((error, stackTrace) {
       debugPrint(error.toString());
 
       Utils().toastMassage(error.toString());
       setState(() {
-      loading = false;
-    });
+        loading = false;
+      });
     });
   }
 
@@ -67,82 +68,103 @@ class _LoginScreenState extends State<LoginScreen> {
         SystemNavigator.pop();
         return true;
       },
-      child: Scaffold(
-        appBar: AppBar(title: const Text("login")),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: emailControler,
-                        decoration: const InputDecoration(
-                          hintText: "Email",
-                          prefixIcon: Icon(Icons.alternate_email),
+      child: Expanded(
+        child: Scaffold(
+          appBar: AppBar(title: const Text("login")),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: emailControler,
+                          decoration: const InputDecoration(
+                            hintText: "Email",
+                            prefixIcon: Icon(Icons.alternate_email),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter email";
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter email";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.visiblePassword,
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          hintText: "Password",
-                          prefixIcon: Icon(Icons.password_outlined),
+                        const SizedBox(
+                          height: 10,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter email";
-                          }
-                          return null;
+                        TextFormField(
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            hintText: "Password",
+                            prefixIcon: Icon(Icons.password_outlined),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter email";
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    )),
+                const SizedBox(
+                  height: 50,
+                ),
+                RoundButton(
+                  loading: loading,
+                  title: "login",
+                  onTap: () {
+                    if (formKey.currentState!.validate()) {
+                      login();
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don't have an account ?"),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignupScreen()));
                         },
-                      ),
-                    ],
-                  )),
-              const SizedBox(
-                height: 50,
-              ),
-              RoundButton(
-                loading: loading,
-                title: "login",
-                onTap: () {
-                  if (formKey.currentState!.validate()) {
-                    login();
-                  }
-                },
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account ?"),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignupScreen()));
-                      },
-                      child: const Text("Sign up"))
-                ],
-              )
-            ],
+                        child: const Text("Sign up"))
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>const LoginPhone(),
+                        ));
+                  },
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: Colors.deepPurple)),
+                    child: const Center(child:  Text('login with phone number')),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
