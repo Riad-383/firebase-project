@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_project/Ui/upload_image.dart';
 import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
@@ -46,29 +47,35 @@ class _AddPostState extends State<AddPost> {
                     loading = true;
                   });
 
-                  String id=DateTime.now().millisecondsSinceEpoch.toString();
-                  databaseRef
-                      .child(id)
-                      .set({'title': postCtrl.text.toString(), 
-                      'id': id,
-                      }).then(
-                          (value) {
-                             
+                  String id = DateTime.now().millisecondsSinceEpoch.toString();
+                  databaseRef.child(id).set({
+                    'title': postCtrl.text.toString(),
+                    'id': id,
+                  }).then((value) {
                     Utils().toastMassage('Post added');
 
                     setState(() {
-                    loading = false;
-                  });
-                  
+                      loading = false;
+                    });
                   }).onError((error, stackTrace) {
-
-                    
                     Utils().toastMassage(error.toString());
 
-                     setState(() {
-                    loading = false;
+                    setState(() {
+                      loading = false;
+                    });
                   });
-                  });
+                }),
+            const SizedBox(
+              height: 10,
+            ),
+            RoundButton(
+                title: 'Upload photo',
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>const  UploadImage(),
+                      ));
                 })
           ],
         ),
