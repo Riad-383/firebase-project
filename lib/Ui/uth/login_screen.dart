@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_project/Ui/forgot_password.dart';
 import 'package:firebase_project/Ui/posts/post_screen.dart';
 import 'package:firebase_project/Ui/uth/login_phone.dart';
 import 'package:firebase_project/Ui/uth/signup_screen.dart';
@@ -129,6 +130,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                 ),
+Align(
+  alignment: Alignment.bottomRight,
+  child:   TextButton(
+  
+                          onPressed: () {
+  
+                            Navigator.push(
+  
+                                context,
+  
+                                MaterialPageRoute(
+  
+                                    builder: (context) => const ForgotPasswordScreen()));
+  
+                          },
+  
+                          child: const Text("Forgot password ?")),
+),
+
                 const SizedBox(
                   height: 30,
                 ),
